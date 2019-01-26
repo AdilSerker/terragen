@@ -10,7 +10,7 @@ WFLAGS = -Wall
 CFLAGS = -O3 -ffast-math
 
 terragen: src/main.cpp 
-	rm -f base && g++ -std=gnu++11 $(CFLAGS) $(WFLAGS) $< $(MODULE) $(LFLAGS) -o $@
+	rm -f terragen && g++ -std=gnu++11 $(CFLAGS) $(WFLAGS) $< $(MODULE) $(LFLAGS) -o $@
 
 all: src/main.cpp 
 	g++ -std=gnu++11 $(CFLAGS) $(WFLAGS) $< $(MODULE) -c
