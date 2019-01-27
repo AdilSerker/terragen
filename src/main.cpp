@@ -12,7 +12,7 @@ int main(void)
 	app = new App();
 	app->init();
 
-	app->loop();
+	app->render();
 
 	delete app;
 

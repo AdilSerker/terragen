@@ -93,51 +93,30 @@ void App::gl_init()
 	glBindVertexArray(VertexArrayID);
 }
 
-void App::update()
-{
-	double xpos, ypos;
-	glfwGetCursorPos(window, &xpos, &ypos);
-	glfwSetCursorPos(window, WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2);
-
-	camera->update(xpos, ypos);
-}
-
 void App::render()
 {
-	glEnable(GL_DEPTH_TEST);
-	glEnable(GL_CULL_FACE);
-
-	glClearDepth(1.0);
-	glClearColor(0.0, 0.0, 0.0, 0.0);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-	scene->draw(light, camera);
-
-	glDisable(GL_DEPTH_TEST);
-	glDisable(GL_CULL_FACE);
-}
-
-void App::loop()
-{
-
-	double lastTime = glfwGetTime();
-	int nbFrames = 0;
 
 	while (glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS &&
 		   glfwWindowShouldClose(window) == 0)
 	{
-		// printf("\033c");
-		double currentTime = glfwGetTime();
-		nbFrames++;
-		if (currentTime - lastTime >= 1.0)
-		{
-			// printf("FPS: %i\n", nbFrames);
-			nbFrames = 0;
-			lastTime += 1.0;
-		}
 
-		update();
-		render();
+		double xpos, ypos;
+		glfwGetCursorPos(window, &xpos, &ypos);
+		glfwSetCursorPos(window, WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2);
+
+		camera->update(xpos, ypos);
+
+		glEnable(GL_DEPTH_TEST);
+		glEnable(GL_CULL_FACE);
+
+		glClearDepth(1.0);
+		glClearColor(0.0, 0.0, 0.0, 0.0);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+		scene->draw(light, camera);
+
+		glDisable(GL_DEPTH_TEST);
+		glDisable(GL_CULL_FACE);
 
 		glfwSwapBuffers(window);
 		glfwWaitEvents();
