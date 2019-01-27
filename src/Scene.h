@@ -7,19 +7,20 @@
 #include "LightDirectional.h"
 #include "Shader.h"
 
-class Scene {
-    public:
+class Scene
+{
+  public:
     Scene();
     ~Scene();
 
     void draw(LightDirectional *light, CameraOrbit *camera);
-    void start();
     void generate();
+    void save();
 
     Heightmap *heightmap;
-    private:
-    Shader *shader;
 
+  private:
+    Shader *shader;
 };
 
 #endif // !SCENE_H

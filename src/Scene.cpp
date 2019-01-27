@@ -62,5 +62,10 @@ void Scene::draw(LightDirectional *light, CameraOrbit *camera)
 
 void Scene::generate()
 {
-	heightmap->generate(pow(2, 10) + 1, 1.0, 2.0);
+	heightmap->generate(pow(2, 10) + 1, 1.0, 1.0);
+}
+
+void Scene::save()
+{
+	heightmap->save();
 }

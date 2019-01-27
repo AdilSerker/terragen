@@ -9,8 +9,6 @@
 class Heightmap
 {
 public:
-  bool loading;
-
   float hscale;
   float vscale;
   float offset;
@@ -26,6 +24,8 @@ public:
   ~Heightmap();
 
   void generate(int size, float mhscale, float mvscale);
+
+  void save();
 
   float sample(glm::vec2 pos);
 

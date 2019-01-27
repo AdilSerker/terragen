@@ -9,9 +9,6 @@ MODULE = src/*.cpp
 WFLAGS = -Wall 
 CFLAGS = -O3 -ffast-math
 
-terragen: src/main.cpp 
-	rm -f terragen && g++ -std=gnu++11 $(CFLAGS) $(WFLAGS) $< $(MODULE) $(LFLAGS) -o $@
-
 all: src/main.cpp 
 	g++ -std=gnu++11 $(CFLAGS) $(WFLAGS) $< $(MODULE) -c
 
@@ -30,7 +27,7 @@ camera: src/CameraOrbit.cpp
 light: src/LightDirectional.cpp
 	g++ -std=gnu++11 $(CFLAGS) $(WFLAGS) $< -c
 
-link: 
+build: 
 	rm -f terragen && g++ ./*.o $(LFLAGS) -o terragen
 
 clean:

@@ -12,8 +12,6 @@ Heightmap::Heightmap()
 	offset = 0.0;
 	vbo = 0;
 	tbo = 0;
-
-	loading = false;
 }
 
 Heightmap::~Heightmap()
@@ -119,14 +117,14 @@ void Heightmap::generate(int size, float mhscale, float mvscale)
 		data.push_back(row);
 	}
 
-	float range = 300.0;
+	float range = 500.0;
 
 	srand(time(NULL));
 
-	data[0][0] = random(-range, range);
-	data[0][size - 1] = random(-range, range);
-	data[size - 1][0] = random(-range, range);
-	data[size - 1][size - 1] = random(-range, range);
+	data[0][0] = random(0, range);
+	data[0][size - 1] = random(0, range);
+	data[size - 1][0] = random(0, range);
+	data[size - 1][size - 1] = random(0, range);
 
 	diamondSquare(size, size - 1, range / 2);
 
@@ -145,7 +143,6 @@ void Heightmap::generate(int size, float mhscale, float mvscale)
 
 	glm::vec3 *posns = (glm::vec3 *)malloc(sizeof(glm::vec3) * w * h);
 	glm::vec3 *norms = (glm::vec3 *)malloc(sizeof(glm::vec3) * w * h);
-	float *aos = (float *)malloc(sizeof(float) * w * h);
 
 	for (int x = 0; x < w; x++)
 		for (int y = 0; y < h; y++)
@@ -170,63 +167,6 @@ void Heightmap::generate(int size, float mhscale, float mvscale)
 					: glm::vec3(0, 1, 0);
 		}
 
-	char ao_filename[512];
-	memcpy(ao_filename, "./heightmaps/generated.txt",
-		   strlen("./heightmaps/generated.txt") - 4);
-	ao_filename[strlen("./heightmaps/generated.txt") - 4] = '\0';
-	strcat(ao_filename, "_ao.txt");
-
-	srand(0);
-
-	FILE *ao_file = fopen(ao_filename, "r");
-	bool ao_generate = false;
-	if (ao_file == NULL || ao_generate)
-	{
-		ao_file = fopen(ao_filename, "w");
-		// ao_generate = true;
-	}
-
-	for (int x = 0; x < w; x++)
-		for (int y = 0; y < h; y++)
-		{
-			if (ao_generate)
-			{
-				float ao_amount = 0.0;
-				float ao_radius = 50.0;
-				int ao_samples = 1024;
-				int ao_steps = 5;
-				for (int i = 0; i < ao_samples; i++)
-				{
-					glm::vec3 off = glm::normalize(glm::vec3(rand() % 10000 - 5000,
-															 rand() % 10000 - 5000,
-															 rand() % 10000 - 5000));
-					if (glm::dot(off, norms[x + y * w]) < 0.0f)
-					{
-						off = -off;
-					}
-					for (int j = 1; j <= ao_steps; j++)
-					{
-						glm::vec3 next =
-							posns[x + y * w] + (((float)j) / ao_steps) * ao_radius * off;
-						if (sample(glm::vec2(next.x, next.z)) > next.y)
-						{
-							ao_amount += 1.0;
-							break;
-						}
-					}
-				}
-
-				aos[x + y * w] = 1.0 - (ao_amount / ao_samples);
-				fprintf(ao_file, y == h - 1 ? "%f\n" : "%f ", aos[x + y * w]);
-			}
-			else
-			{
-				fscanf(ao_file, y == h - 1 ? "%f\n" : "%f ", &aos[x + y * w]);
-			}
-		}
-
-	fclose(ao_file);
-
 	float *vbo_data = (float *)malloc(sizeof(float) * 7 * w * h);
 
 	uint32_t *tbo_data = (uint32_t *)malloc(sizeof(uint32_t) * 3 * 2 *
@@ -241,12 +181,11 @@ void Heightmap::generate(int size, float mhscale, float mvscale)
 			vbo_data[x * 7 + y * 7 * w + 3] = norms[x + y * w].x;
 			vbo_data[x * 7 + y * 7 * w + 4] = norms[x + y * w].y;
 			vbo_data[x * 7 + y * 7 * w + 5] = norms[x + y * w].z;
-			vbo_data[x * 7 + y * 7 * w + 6] = aos[x + y * w];
+			vbo_data[x * 7 + y * 7 * w + 6] = 0;
 		}
 
 	free(posns);
 	free(norms);
-	free(aos);
 
 	for (int x = 0; x < (w - 1) / 2; x++)
 		for (int y = 0; y < (h - 1) / 2; y++)
@@ -277,6 +216,29 @@ void Heightmap::generate(int size, float mhscale, float mvscale)
 
 	free(vbo_data);
 	free(tbo_data);
+}
+
+void Heightmap::save()
+{
+	char filename[512];
+	memcpy(filename, "./heightmaps/generated.txt",
+		   strlen("./heightmaps/generated.txt") - 4);
+	filename[strlen("./heightmaps/generated.txt") - 4] = '\0';
+	strcat(filename, "_ds.txt");
+
+	FILE *file = fopen(filename, "w");
+
+	int size = data.size();
+
+	for (int x = 0; x < size; ++x)
+	{
+		for (int y = 0; y < size; ++y)
+		{
+			fprintf(file, y == size - 1 ? "%f\n" : "%f ", data[x][y]);
+		}
+	}
+
+	fclose(file);
 }
 
 float Heightmap::sample(glm::vec2 pos)

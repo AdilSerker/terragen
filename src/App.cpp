@@ -5,11 +5,6 @@ extern GLFWwindow *window;
 
 #include <iostream>
 
-// void character_callback(GLFWwindow *window, unsigned int codepoint)
-// {
-// 	std::cout << codepoint << std::endl;
-// }
-
 App::~App()
 {
 	glDeleteVertexArrays(1, &VertexArrayID);
@@ -75,10 +70,17 @@ void App::gl_init()
 	glfwSetCharCallback(window, [](GLFWwindow *window, unsigned int codepoint) -> void {
 		App *pw = (App *)glfwGetWindowUserPointer(window);
 
-		if (codepoint == 114)
+		if (codepoint == 103)
 		{
 			pw->scene->generate();
 		}
+
+		if (codepoint == 115)
+		{
+			pw->scene->save();
+		}
+
+		// std::cout << codepoint << std::endl;
 	});
 
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
