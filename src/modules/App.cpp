@@ -43,10 +43,10 @@ void App::gl_init()
 
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-	window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "BASE", NULL, NULL);
+	window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Terragen", NULL, NULL);
 	if (window == NULL)
 	{
-		fprintf(stderr, "Failed to open GLFW window. If you have an Intel GPU, they are not 3.3 compatible. Try the 2.1 version of the tutorials.\n");
+		fprintf(stderr, "Failed to open GLFW window. If you have an Intel GPU, they are not 3.3 compatible.\n");
 		getchar();
 		glfwTerminate();
 		exit(-1);
@@ -63,8 +63,6 @@ void App::gl_init()
 	}
 
 	glfwSetWindowPos(window, 200, 200);
-
-	glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
 
 	glfwSetWindowUserPointer(window, this);
 	glfwSetCharCallback(window, [](GLFWwindow *window, unsigned int codepoint) -> void {
@@ -84,8 +82,6 @@ void App::gl_init()
 	});
 
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-
-	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
 	glDepthFunc(GL_LESS);
 

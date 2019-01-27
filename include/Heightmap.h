@@ -30,7 +30,7 @@ public:
   float sample(glm::vec2 pos);
 
 private:
-  void diamondSquare(int size, int level, float range);
+  void diamond_square(int size, int level, float range);
 };
 
 #endif /* HEIGHTMAP_H */

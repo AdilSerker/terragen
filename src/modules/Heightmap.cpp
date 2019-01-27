@@ -36,7 +36,7 @@ double random(double min, double max)
 
 int counter = 0;
 
-void Heightmap::diamondSquare(int size, int level, float range)
+void Heightmap::diamond_square(int size, int level, float range)
 {
 	if (level < 1)
 		return;
@@ -76,7 +76,7 @@ void Heightmap::diamondSquare(int size, int level, float range)
 		}
 	}
 
-	diamondSquare(size, level / 2, range / 2);
+	diamond_square(size, level / 2, range / 2);
 }
 
 void Heightmap::generate(int size, float mhscale, float mvscale)
@@ -104,7 +104,6 @@ void Heightmap::generate(int size, float mhscale, float mvscale)
 
 	data.clear();
 
-	std::string line;
 	for (int x = 0; x < size; ++x)
 	{
 		std::vector<float> row;
@@ -126,7 +125,7 @@ void Heightmap::generate(int size, float mhscale, float mvscale)
 	data[size - 1][0] = random(0, range);
 	data[size - 1][size - 1] = random(0, range);
 
-	diamondSquare(size, size - 1, range / 2);
+	diamond_square(size, size - 1, range / 2);
 
 	int w = data.size();
 	int h = data[0].size();
