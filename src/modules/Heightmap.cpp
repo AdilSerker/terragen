@@ -50,7 +50,7 @@ void Heightmap::diamond_square(int size, int level, float range)
 			float c = data[i + level][j];
 			float d = data[i + level][j + level];
 
-			data[i + level / 2][j + level / 2] = (++counter == 1) ? (a + b + c + d) / 4 + random(range / 4, range) : (a + b + c + d) / 4 + random(-range, range);
+			data[i + level / 2][j + level / 2] = (a + b + c + d) / 4 + random(-range, range);
 		}
 	}
 
@@ -69,10 +69,10 @@ void Heightmap::diamond_square(int size, int level, float range)
 			float e3 = (j + level + level / 2) < size ? data[i + level / 2][j + level + level / 2] : e0;
 			float e4 = (i + level + level / 2) < size ? data[i + level + level / 2][j - level / 2] : e0;
 
-			data[i][j + level / 2] = (e1 == e0) ? (a + c + e0) / 3 + random(0, range) : (a + c + e0 + e1) / 4 - random(-range, range);
-			data[i + level / 2][j] = (e2 == e0) ? (a + b + e0) / 3 + random(0, range) : (a + b + e0 + e2) / 4 - random(-range, range);
-			data[i + level][j + level / 2] = (e4 == e0) ? (a + b + e0) / 3 + random(0, range) : (b + d + e0 + e4) / 4 - random(-range, range);
-			data[i + level / 2][j + level] = (e3 == e0) ? (a + b + e0) / 3 + random(0, range) : (c + d + e0 + e3) / 4 - random(-range, range);
+			data[i][j + level / 2] = (e1 == e0) ? (a + c + e0) / 3 + random(-range, range) : (a + c + e0 + e1) / 4 + random(-range, range);
+			data[i + level / 2][j] = (e2 == e0) ? (a + b + e0) / 3 + random(-range, range) : (a + b + e0 + e2) / 4 + random(-range, range);
+			data[i + level][j + level / 2] = (e4 == e0) ? (a + b + e0) / 3 + random(-range, range) : (b + d + e0 + e4) / 4 + random(-range, range);
+			data[i + level / 2][j + level] = (e3 == e0) ? (a + b + e0) / 3 + random(-range, range) : (c + d + e0 + e3) / 4 + random(-range, range);
 		}
 	}
 
