@@ -77,6 +77,67 @@ void Heightmap::diamond_square(int size, int level, float range)
 	diamond_square(size, level / 2, range / 2);
 }
 
+void Heightmap::smooth(int c)
+{
+	if (vbo != 0)
+	{
+		glDeleteBuffers(1, &vbo);
+		vbo = 0;
+	}
+	if (tbo != 0)
+	{
+		glDeleteBuffers(1, &tbo);
+		tbo = 0;
+	}
+
+	for (int i = 0; i < c; ++i)
+	{
+		blur();
+	}
+
+	glGenBuffers(1, &vbo);
+	glGenBuffers(1, &tbo);
+
+	gen_vbo_tbo_data();
+}
+
+void Heightmap::blur()
+{
+
+	std::vector<std::vector<float>> old_data;
+
+	int size = data.size();
+
+	for (int i = 0; i < size; ++i)
+	{
+		std::vector<float> row;
+		for (int j = 0; j < size; ++j)
+		{
+			float f = data[i][j];
+			row.push_back(f);
+		}
+		old_data.push_back(row);
+	}
+
+	for (int i = 1; i < size - 2; ++i)
+	{
+		for (int j = 1; j < size - 2; ++j)
+		{
+			float v[9];
+			v[0] = old_data[i - 1][j - 1];
+			v[1] = old_data[i - 1][j];
+			v[2] = old_data[i - 1][j + 1];
+			v[3] = old_data[i][j - 1];
+			v[4] = old_data[i][j];
+			v[5] = old_data[i][j + 1];
+			v[6] = old_data[i + 1][j - 1];
+			v[7] = old_data[i + 1][j];
+			v[8] = old_data[i + 1][j + 1];
+			data[i][j] = (v[0] + v[1] + v[2] + v[3] + v[4] + v[5] + v[6] + v[7] + v[8]) / 9;
+		}
+	}
+}
+
 void Heightmap::generate(int size, float mhscale, float mvscale)
 {
 
@@ -125,6 +186,68 @@ void Heightmap::generate(int size, float mhscale, float mvscale)
 
 	diamond_square(size, size - 1, range / 2);
 
+	printf("Generate Heightmap (%i %i)\n", (int)size, (int)size);
+
+	gen_vbo_tbo_data();
+}
+
+void Heightmap::save()
+{
+	char filename[512];
+	memcpy(filename, "./heightmaps/generated.txt",
+		   strlen("./heightmaps/generated.txt") - 4);
+	filename[strlen("./heightmaps/generated.txt") - 4] = '\0';
+	strcat(filename, "_ds.txt");
+
+	FILE *file = fopen(filename, "w");
+
+	int size = data.size();
+
+	for (int x = 0; x < size; ++x)
+	{
+		for (int y = 0; y < size; ++y)
+		{
+			fprintf(file, y == size - 1 ? "%f\n" : "%f ", data[x][y]);
+		}
+	}
+
+	fclose(file);
+}
+
+float Heightmap::sample(glm::vec2 pos)
+{
+	int w = data.size();
+	int h = data[0].size();
+
+	pos.x = (pos.x / hscale) + w / 2;
+	pos.y = (pos.y / hscale) + h / 2;
+
+	float a0 = fmod(pos.x, 1.0);
+	float a1 = fmod(pos.y, 1.0);
+
+	int x0 = (int)std::floor(pos.x), x1 = (int)std::ceil(pos.x);
+	int y0 = (int)std::floor(pos.y), y1 = (int)std::ceil(pos.y);
+
+	x0 = x0 < 0 ? 0 : x0;
+	x0 = x0 >= w ? w - 1 : x0;
+	x1 = x1 < 0 ? 0 : x1;
+	x1 = x1 >= w ? w - 1 : x1;
+	y0 = y0 < 0 ? 0 : y0;
+	y0 = y0 >= h ? h - 1 : y0;
+	y1 = y1 < 0 ? 0 : y1;
+	y1 = y1 >= h ? h - 1 : y1;
+
+	float s0 = vscale * (data[x0][y0] - offset);
+	float s1 = vscale * (data[x1][y0] - offset);
+	float s2 = vscale * (data[x0][y1] - offset);
+	float s3 = vscale * (data[x1][y1] - offset);
+
+	return (s0 * (1 - a0) + s1 * a0) * (1 - a1) + (s2 * (1 - a0) + s3 * a0) * a1;
+}
+
+void Heightmap::gen_vbo_tbo_data()
+{
+
 	int w = data.size();
 	int h = data[0].size();
 
@@ -135,8 +258,6 @@ void Heightmap::generate(int size, float mhscale, float mvscale)
 			offset += data[x][y];
 		}
 	offset /= w * h;
-
-	printf("Generate Heightmap (%i %i)\n", (int)w, (int)h);
 
 	glm::vec3 *posns = (glm::vec3 *)malloc(sizeof(glm::vec3) * w * h);
 	glm::vec3 *norms = (glm::vec3 *)malloc(sizeof(glm::vec3) * w * h);
@@ -213,58 +334,4 @@ void Heightmap::generate(int size, float mhscale, float mvscale)
 
 	free(vbo_data);
 	free(tbo_data);
-}
-
-void Heightmap::save()
-{
-	char filename[512];
-	memcpy(filename, "./heightmaps/generated.txt",
-		   strlen("./heightmaps/generated.txt") - 4);
-	filename[strlen("./heightmaps/generated.txt") - 4] = '\0';
-	strcat(filename, "_ds.txt");
-
-	FILE *file = fopen(filename, "w");
-
-	int size = data.size();
-
-	for (int x = 0; x < size; ++x)
-	{
-		for (int y = 0; y < size; ++y)
-		{
-			fprintf(file, y == size - 1 ? "%f\n" : "%f ", data[x][y]);
-		}
-	}
-
-	fclose(file);
-}
-
-float Heightmap::sample(glm::vec2 pos)
-{
-	int w = data.size();
-	int h = data[0].size();
-
-	pos.x = (pos.x / hscale) + w / 2;
-	pos.y = (pos.y / hscale) + h / 2;
-
-	float a0 = fmod(pos.x, 1.0);
-	float a1 = fmod(pos.y, 1.0);
-
-	int x0 = (int)std::floor(pos.x), x1 = (int)std::ceil(pos.x);
-	int y0 = (int)std::floor(pos.y), y1 = (int)std::ceil(pos.y);
-
-	x0 = x0 < 0 ? 0 : x0;
-	x0 = x0 >= w ? w - 1 : x0;
-	x1 = x1 < 0 ? 0 : x1;
-	x1 = x1 >= w ? w - 1 : x1;
-	y0 = y0 < 0 ? 0 : y0;
-	y0 = y0 >= h ? h - 1 : y0;
-	y1 = y1 < 0 ? 0 : y1;
-	y1 = y1 >= h ? h - 1 : y1;
-
-	float s0 = vscale * (data[x0][y0] - offset);
-	float s1 = vscale * (data[x1][y0] - offset);
-	float s2 = vscale * (data[x0][y1] - offset);
-	float s3 = vscale * (data[x1][y1] - offset);
-
-	return (s0 * (1 - a0) + s1 * a0) * (1 - a1) + (s2 * (1 - a0) + s3 * a0) * a1;
 }

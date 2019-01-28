@@ -13,20 +13,20 @@ CFLAGS = -O3 -ffast-math
 all: src/main.cpp 
 	g++ -std=gnu++11 $(CFLAGS) $(WFLAGS) $< $(MODULE) -I $(INC) -c
 
-app: src/App.cpp
-	g++ -std=gnu++11 $(CFLAGS) $(WFLAGS) $< -c
+app: src/modules/App.cpp
+	g++ -std=gnu++11 $(CFLAGS) $(WFLAGS) -I $(INC) $< -c
 
-scene: src/Scene.cpp
-	g++ -std=gnu++11 $(CFLAGS) $(WFLAGS) $< -c
+scene: src/modules/Scene.cpp
+	g++ -std=gnu++11 $(CFLAGS) $(WFLAGS) -I $(INC) $< -c
 
-hm: src/Heightmap.cpp
-	g++ -std=gnu++11 $(CFLAGS) $(WFLAGS) $< -c
+hm: src/modules/Heightmap.cpp
+	g++ -std=gnu++11 $(CFLAGS) $(WFLAGS) -I $(INC) $< -c
 
-camera: src/CameraOrbit.cpp
-	g++ -std=gnu++11 $(CFLAGS) $(WFLAGS) $< -c
+camera: src/modules/CameraOrbit.cpp
+	g++ -std=gnu++11 $(CFLAGS) $(WFLAGS) -I $(INC) $< -c
 
-light: src/LightDirectional.cpp
-	g++ -std=gnu++11 $(CFLAGS) $(WFLAGS) $< -c
+light: src/modules/LightDirectional.cpp
+	g++ -std=gnu++11 $(CFLAGS) $(WFLAGS) -I $(INC) $< -c
 
 build: 
 	rm -f terragen && g++ ./*.o $(LFLAGS) -I $(INC) -o terragen

@@ -78,6 +78,11 @@ void App::gl_init()
 			pw->scene->save();
 		}
 
+		if (codepoint == 98)
+		{
+			pw->scene->smooth();
+		}
+
 		// std::cout << codepoint << std::endl;
 	});
 

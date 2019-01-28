@@ -8,29 +8,32 @@
 
 class Heightmap
 {
-public:
-  float hscale;
-  float vscale;
-  float offset;
-  std::vector<std::vector<float>> data;
+  public:
+	float hscale;
+	float vscale;
+	float offset;
+	std::vector<std::vector<float>> data;
 
-  int range;
+	int range;
 
-  GLuint vbo;
-  GLuint tbo;
+	GLuint vbo;
+	GLuint tbo;
 
-  Heightmap();
+	Heightmap();
 
-  ~Heightmap();
+	~Heightmap();
 
-  void generate(int size, float mhscale, float mvscale);
+	void generate(int size, float mhscale, float mvscale);
+	void smooth(int c);
+	void save();
 
-  void save();
+	float sample(glm::vec2 pos);
 
-  float sample(glm::vec2 pos);
+  private:
+	void diamond_square(int size, int level, float range);
+	void blur();
 
-private:
-  void diamond_square(int size, int level, float range);
+	void gen_vbo_tbo_data();
 };
 
 #endif /* HEIGHTMAP_H */

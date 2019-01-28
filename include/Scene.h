@@ -10,17 +10,18 @@
 class Scene
 {
   public:
-    Scene();
-    ~Scene();
+	Scene();
+	~Scene();
 
-    void draw(LightDirectional *light, CameraOrbit *camera);
-    void generate();
-    void save();
+	void draw(LightDirectional *light, CameraOrbit *camera);
+	void generate();
+	void smooth();
+	void save();
 
-    Heightmap *heightmap;
+	Heightmap *heightmap;
 
   private:
-    Shader *shader;
+	Shader *shader;
 };
 
 #endif // !SCENE_H

@@ -69,3 +69,8 @@ void Scene::save()
 {
 	heightmap->save();
 }
+
+void Scene::smooth()
+{
+	heightmap->smooth(5);
+}
