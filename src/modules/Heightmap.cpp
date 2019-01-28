@@ -34,8 +34,6 @@ double random(double min, double max)
 	return min + d * (max - min);
 }
 
-int counter = 0;
-
 void Heightmap::diamond_square(int size, int level, float range)
 {
 	if (level < 1)
@@ -81,7 +79,7 @@ void Heightmap::diamond_square(int size, int level, float range)
 
 void Heightmap::generate(int size, float mhscale, float mvscale)
 {
-	counter = 0;
+
 	vscale = 1.0;
 	hscale = 1.0;
 
