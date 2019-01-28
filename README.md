@@ -27,7 +27,6 @@ Press **S** to save map in *{rootFolder}/heightmaps*
 Screenshots
 ------------
 
-![screenshot from 2019-01-27 00-15-37](https://user-images.githubusercontent.com/22000537/51792925-71a08880-21c9-11e9-8924-2667d4faec05.png)
-![screenshot from 2019-01-27 00-16-01](https://user-images.githubusercontent.com/22000537/51792931-8715b280-21c9-11e9-9cbf-8a4b5dcf9730.png)
-![screenshot from 2019-01-27 00-17-01](https://user-images.githubusercontent.com/22000537/51792935-9c8adc80-21c9-11e9-9b5c-55172c1a2e88.png)
-![screenshot from 2019-01-27 00-17-09](https://user-images.githubusercontent.com/22000537/51792939-b5938d80-21c9-11e9-9780-ce50ece64026.png)
+![screenshot from 2019-01-28 03-13-28](https://user-images.githubusercontent.com/22000537/51808904-a5ec7580-22ab-11e9-8356-5d523155e7e5.png)
+![screenshot from 2019-01-28 03-14-31](https://user-images.githubusercontent.com/22000537/51808910-b8ff4580-22ab-11e9-846d-7bf0c627ce1f.png)
+![screenshot from 2019-01-28 03-14-46](https://user-images.githubusercontent.com/22000537/51808913-bd2b6300-22ab-11e9-87f5-ec4ec8219bcd.png)
