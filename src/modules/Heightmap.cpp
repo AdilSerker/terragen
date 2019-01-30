@@ -299,7 +299,7 @@ void Heightmap::gen_vbo_tbo_data()
 			vbo_data[x * 7 + y * 7 * w + 3] = norms[x + y * w].x;
 			vbo_data[x * 7 + y * 7 * w + 4] = norms[x + y * w].y;
 			vbo_data[x * 7 + y * 7 * w + 5] = norms[x + y * w].z;
-			vbo_data[x * 7 + y * 7 * w + 6] = 0;
+			vbo_data[x * 7 + y * 7 * w + 6] = 0.0f;
 		}
 
 	free(posns);

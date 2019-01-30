@@ -12,7 +12,7 @@ CameraOrbit::CameraOrbit()
 	pitch = M_PI / 6;
 	yaw = 0;
 	target = glm::vec3(0);
-	distance = 1500;
+	distance = 400;
 
 	invert_y = -1;
 }
