@@ -21,8 +21,12 @@ sucessfully you can run the terragen:
 How to use
 -----------
 
-Press **G** to generate map,
+Press **G** to generate map
+
+Press **B** to smooth map
+
 Press **S** to save map in *{rootFolder}/heightmaps*
+
 
 Screenshots
 ------------
