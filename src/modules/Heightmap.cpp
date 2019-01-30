@@ -175,7 +175,7 @@ void Heightmap::generate(int size, float mhscale, float mvscale)
 		data.push_back(row);
 	}
 
-	float range = 500.0;
+	float range = (size - 1) / 2;
 
 	srand(time(NULL));
 

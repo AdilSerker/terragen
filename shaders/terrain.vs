@@ -1,19 +1,26 @@
-#version 330 core
-
-uniform mat4 view;
-uniform mat4 proj;
+#version 330
 
 attribute vec3 vPosition;
 attribute vec3 vNormal;
-attribute float vAO;
 
-varying vec3 fNormal;
-varying vec3 fPosition;
-varying float fAO;
+out vec3 LightIntensity;
 
-void main() {
-  fNormal = vNormal;
-  fPosition = vPosition;
-  fAO = vAO;
-  gl_Position = proj * view * vec4(vPosition, 1);
+uniform vec4 LightPosition; // Light position in eye coords.
+uniform vec3 Kd;            // Diffuse reflectivity
+uniform vec3 Ld;            // Diffuse light intensity
+
+uniform mat4 ModelViewMatrix;
+uniform mat3 NormalMatrix;
+uniform mat4 ProjectionMatrix;
+uniform mat4 MVP;
+
+void main()
+{
+    vec3 tnorm = normalize( NormalMatrix * vNormal);
+    vec4 eyeCoords = ModelViewMatrix * vec4(vPosition,1.0);
+    vec3 s = normalize(vec3(LightPosition - eyeCoords));
+
+    LightIntensity = Ld * Kd * max( dot( s, tnorm ), 0.0 );
+
+    gl_Position = MVP * vec4(vPosition,1.0);
 }
