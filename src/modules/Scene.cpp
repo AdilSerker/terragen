@@ -22,9 +22,15 @@ void Scene::draw(LightDirectional *light, CameraOrbit *camera)
 	glm::mat4 view = camera->view_matrix();
 	glm::vec4 lp = view * glm::vec4(light->position, 1.0);
 
-	glUniform3f(glGetUniformLocation(shader->program, "Ld"), 0.9f, 0.5f, 0.3f);
-	glUniform3f(glGetUniformLocation(shader->program, "Kd"), 1.0f, 1.0f, 1.0f);
-	glUniform4f(glGetUniformLocation(shader->program, "LightPosition"), lp.x, lp.y, lp.z, lp.w);
+	glUniform3f(glGetUniformLocation(shader->program, "Material.Ka"), 0.5f, 0.5f, 0.5f); // Ambient reflectivity
+	glUniform3f(glGetUniformLocation(shader->program, "Material.Kd"), 0.7f, 0.7f, 0.7f); // Diffuse reflectivity
+	glUniform3f(glGetUniformLocation(shader->program, "Material.Ks"), 0.8f, 0.8f, 0.8f); // Specular reflectivity
+	glUniform1f(glGetUniformLocation(shader->program, "Material.Shininess"), 100.0f);	// Specular shininess factor
+
+	glUniform4f(glGetUniformLocation(shader->program, "Light.Position"), lp.x, lp.y, lp.z, lp.w); // Light position in eye coords.
+	glUniform3f(glGetUniformLocation(shader->program, "Light.La"), 0.1f, 0.1f, 0.1f);			  // Ambient light intensity
+	glUniform3f(glGetUniformLocation(shader->program, "Light.Ld"), 1.0f, 1.0f, 1.0f);			  // Diffuse light intensity
+	glUniform3f(glGetUniformLocation(shader->program, "Light.Ls"), 1.0f, 1.0f, 1.0f);			  // Specular light intensity
 
 	glm::mat4 mv = view * glm::mat4(1.0f);
 	glUniformMatrix4fv(glGetUniformLocation(shader->program, "ModelViewMatrix"), 1, GL_FALSE, glm::value_ptr(mv));
@@ -38,16 +44,16 @@ void Scene::draw(LightDirectional *light, CameraOrbit *camera)
 
 	glBindBuffer(GL_ARRAY_BUFFER, heightmap->vbo);
 
-	glEnableVertexAttribArray(glGetAttribLocation(shader->program, "vPosition"));
-	glEnableVertexAttribArray(glGetAttribLocation(shader->program, "vNormal"));
+	glEnableVertexAttribArray(glGetAttribLocation(shader->program, "VertexPosition"));
+	glEnableVertexAttribArray(glGetAttribLocation(shader->program, "VertexNormal"));
 
-	glVertexAttribPointer(glGetAttribLocation(shader->program, "vPosition"), 3, GL_FLOAT, GL_FALSE, sizeof(float) * 7, (void *)(sizeof(float) * 0));
-	glVertexAttribPointer(glGetAttribLocation(shader->program, "vNormal"), 3, GL_FLOAT, GL_FALSE, sizeof(float) * 7, (void *)(sizeof(float) * 3));
+	glVertexAttribPointer(glGetAttribLocation(shader->program, "VertexPosition"), 3, GL_FLOAT, GL_FALSE, sizeof(float) * 7, (void *)(sizeof(float) * 0));
+	glVertexAttribPointer(glGetAttribLocation(shader->program, "VertexNormal"), 3, GL_FLOAT, GL_FALSE, sizeof(float) * 7, (void *)(sizeof(float) * 3));
 
 	glDrawElements(GL_TRIANGLES, ((heightmap->data.size() - 1) / 2) * ((heightmap->data[0].size() - 1) / 2) * 2 * 3, GL_UNSIGNED_INT, (void *)0);
 
-	glDisableVertexAttribArray(glGetAttribLocation(shader->program, "vPosition"));
-	glDisableVertexAttribArray(glGetAttribLocation(shader->program, "vNormal"));
+	glDisableVertexAttribArray(glGetAttribLocation(shader->program, "VertexPosition"));
+	glDisableVertexAttribArray(glGetAttribLocation(shader->program, "VertexNormal"));
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
